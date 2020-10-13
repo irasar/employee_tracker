@@ -193,27 +193,34 @@ const addEmployee = () => {
     .prompt([{
         type: "input",
         name: "newFirst",
-        message: "What is the employees first name?"
+        message: "What is the employee's first name?"
     },
     {
         type: "input",
         name: "newLast",
-        message: "What is the employees last name?"
+        message: "What is the employee's last name?"
     },
     {
-        type: "input",
+        type: "list",
         name: "newRole",
-        message: "What is the employees role?"
+        message: "What is the employee's role?",
+        choices: [""]
     },
     {
-        type: "input",
+        type: "list",
         name: "newManager",
-        message: "What is the employees role?"
-    },
+        message: "Who is the employee's manager?",
+        choices: [""]
+    }
 ]).then(function(answers){
         connection.query(
-            "INSERT INTO employees SET ?",
-        { name: answers.addEmp },
+            "INSERT INTO employee SET ?",
+            {
+                first_name: answers.newFirst,
+                last_name: answers.newLast,
+                role_id: answers.newRole,
+                manager_id: answers.newManager
+            },
         function (err) {
             if (err) throw err;
     console.log("Employee added!");
