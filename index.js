@@ -95,13 +95,13 @@ function loadPrompts() {
                     console.log("Add Role");
                     return addRole();
                     break;
-                    case "ADD_DEPARTMENTS":
+                    case "ADD_DEPARTMENT":
                     console.log("Add Department");
                     return addDep();
                     break;
                     case "UPDATE_EMPROLE":
                     console.log("Update Employee Roles");
-                    return addEmpRole();
+                    return updateEmpRole();
                     break;
 
                 default:
@@ -168,6 +168,23 @@ const addRole = () => {
     
 };
 
-const addEmpRole = () => {
-//calling file:dbfunction.js
-// DB.viewEmployees()
+const addDep = () => {
+    inquirer
+    .prompt([{
+        type: "input",
+        name: "depAdd",
+        message: "Enter the name of the department you would like to add:"
+    }
+]).then(function(answers){
+        connection.query(
+            "INSERT INTO department SET ?",
+            { name: answers.depAdd },
+            function (err) {
+                if (err) throw err;
+        console.log("Department added!");
+        loadPrompts()
+            }
+        );
+    });
+}
+
