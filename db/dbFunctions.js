@@ -1,3 +1,3 @@
-class DB {
-    viewAllEmployees()
-}
+// class DB {
+//     viewAllEmployees()
+// }
