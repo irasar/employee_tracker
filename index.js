@@ -56,6 +56,18 @@ function loadPrompts() {
             name: "Add Employee",
             value: "ADD_EMPLOYEE",
           },
+          {
+            name: "Add Department",
+            value: "ADD_DEPARTMENT",
+          },
+          {
+            name: "Add Role",
+            value: "ADD_ROLE",
+          },
+          {
+            name: "Update Employee Role",
+            value: "UPDATE_ROLE",
+          }
       ],
     })
     .then((answers) => {
@@ -75,6 +87,10 @@ function loadPrompts() {
           console.log("View Roles");
           return viewRoles();
           break;
+          case "ADD_EMPLOYEE":
+            console.log("Add employees");
+            return addEmployee();
+            break;
 
         default:
           console.log("quit");
@@ -102,6 +118,14 @@ const viewRoles = () => {
     console.table(results);
   });
 };
+
+
+const addEmployee = () => {
+    connection.query("SELECT * FROM role ", function (err, results) {
+      if (err) throw err;
+      console.table(results);
+    });
+  };
 
 init();
 //calling file:dbfunction.js
