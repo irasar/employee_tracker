@@ -99,7 +99,7 @@ function loadPrompts() {
                     console.log("Add Department");
                     return addDep();
                     break;
-                    case "UPDATE_EMPROLE":
+                    case "UPDATE_ROLE":
                     console.log("Update Employee Roles");
                     return updateEmpRole();
                     break;
@@ -188,3 +188,37 @@ const addDep = () => {
     });
 }
 
+const addEmployee = () => {
+    inquirer
+    .prompt([{
+        type: "input",
+        name: "newFirst",
+        message: "What is the employees first name?"
+    },
+    {
+        type: "input",
+        name: "newLast",
+        message: "What is the employees last name?"
+    },
+    {
+        type: "input",
+        name: "newRole",
+        message: "What is the employees role?"
+    },
+    {
+        type: "input",
+        name: "newManager",
+        message: "What is the employees role?"
+    },
+]).then(function(answers){
+        connection.query(
+            "INSERT INTO employees SET ?",
+        { name: answers.addEmp },
+        function (err) {
+            if (err) throw err;
+    console.log("Employee added!");
+    loadPrompts()
+        }
+    );
+});
+}
