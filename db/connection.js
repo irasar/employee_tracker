@@ -1,3 +1,5 @@
+var inquirer = require('inquirer');
+
 const { start } = require("repl");
 
 var connection = mysql.createConnection({
@@ -6,7 +8,7 @@ var connection = mysql.createConnection({
     port: 3306,
     user: "root",
     //your password
-    password: "MyNewPass",
+    password: "rootroot",
     database: "employee_DB"
 });
 
