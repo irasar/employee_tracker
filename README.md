@@ -4,8 +4,7 @@
 
 
 
-This project is an application that helps
- architect and build a solution for managing a company's employees using node, inquirer, and MySQL.
+This project is an application that helps build a solution for managing a company's employees using node, inquirer, and MySQL. Directly in the terminal, you will be prompted with questions 
 
 
 There's no one right way to structure a good README. There is one very wrong way, however, and that is to not include a README at all or to create a very anemic one. This guide outlines a few best practices. As you progress in your career, you will develop your own ideas about what makes a good README.
