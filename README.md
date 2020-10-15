@@ -2,7 +2,7 @@
 
 ## Description 
 
-This project is an application that helps build a solution for managing a company's employees using node, inquirer, and MySQL. Directly in the terminal, you will be prompted with questions pertaining to managing your company. You are able to view all your employees, departments, and roles. You are also able to add departments, roles, and employee. Lastly, you can also update employee roles.
+This project is an application that helps build a solution for managing a company's employees using node, inquirer, and MySQL. Directly in the terminal, you will be prompted with questions pertaining to managing your company. You are able to view all your employees, departments, and roles. You are also able to add departments, roles, and employee. Lastly, you can also update the employee's role.
 
 
 ## Table of Contents (Optional)
@@ -25,7 +25,7 @@ Run: <pre><code>node index.js</pre></code><br>
 
 ## Credits
 
-created with help by:<br>
+Created with help by:<br>
 https://github.com/j-nederveld
 
 
