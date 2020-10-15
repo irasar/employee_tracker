@@ -8,34 +8,31 @@ const DB = require("./db/dbFunctions.js");
 const { start } = require("repl");
 const { connect } = require("http2");
 
+let roleID;
 
 const updateArray = [];
-
+//connecting to db
 var connection = mysql.createConnection({
     host: "localhost",
-    //your port; if not 3306
     port: 3306,
     user: "root",
-    //your password
     password: "rootroot",
     database: "employees",
 });
 
 connection.connect(function (err) {
     if (err) throw err;
-    //run the function after the connection is made to prompt the user
     init();
 });
 
-//function init()
-
+//displaying big logo
 function init() {
     const logoText = logo({ name: "Employee Manager" }).render();
     console.log(logoText);
-    //load our prompts
+    //calling our main menu function for prompts
     loadPrompts();
 }
-
+//displaying main menu prompts 
 function loadPrompts() {
     getRoles();
     inquirer
@@ -75,7 +72,7 @@ function loadPrompts() {
             ],
         })
         .then((answers) => {
-            //switch statement
+            //calling functions depending on users choice
             switch (answers.choice) {
                 case "VIEW_EMPLOYEES":
                     console.log("view employees");
@@ -115,23 +112,32 @@ function loadPrompts() {
 }
 
 const viewEmployees = () => {
-    connection.query("SELECT * FROM employee ", function (err, results) {
+    connection.query( "SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name FROM employee INNER JOIN role on role_id = role.id INNER JOIN department on department_id = department.id", function (err, results) {
         if (err) throw err;
+        //logging the table results to the console
         console.table(results);
+        //displaying main menu prompts
+        loadPrompts();
     });
 };
 
 const viewDepartment = () => {
     connection.query("SELECT * FROM department ", function (err, results) {
         if (err) throw err;
+        //logging the table results to the console
         console.table(results);
+         //displaying main menu prompts
+        loadPrompts();
     });
 };
 
 const viewRoles = () => {
     connection.query("SELECT * FROM role ", function (err, results) {
         if (err) throw err;
+        //logging the table results to the console
         console.table(results);
+         //displaying main menu prompts
+        loadPrompts();
     });
 };
 
@@ -165,7 +171,7 @@ const addRole = () => {
                 function (err) {
                     if (err) throw err;
                     console.log("Your role was created successfully!");
-                    // re-prompt the user for if they want to bid or post
+                    
                     loadPrompts();
                 }
             );
@@ -187,7 +193,7 @@ const addDep = () => {
                 { name: answers.depAdd },
                 function (err) {
                     if (err) throw err;
-                    console.log("Department added!");
+                    console.log("Your department was created successfully!");
                     loadPrompts();
                 }
             );
@@ -235,19 +241,18 @@ const addEmployee = () => {
                     if (err) throw err;
                 }
             );
-            console.log("Employee added!");
+            console.log("Your employee was created successfully!");
             loadPrompts();
         });
 
-};  
+};
 
-const updateEmpRole() {
-
+function updateEmpRole() {
     console.log("Update employee role");
-
     let query = "SELECT first_name, last_name, title, role.id FROM employee LEFT JOIN role ON role.id = employee.role_id";
-    connect.query(query, function (err, res) {
+    connection.query(query, function (err, results) {
         if (err) throw err;
+        console.log(updateArray);
         inquirer
             .prompt([
                 {
@@ -263,37 +268,63 @@ const updateEmpRole() {
                     message: "Which role would you like this employee to now have?",
                     choices: function () {
                         var updateArray = [];
-                        for (let i = 0; i < res.length; i++) {
-                            updateArray.push(res[i].title);
+                        for (let i = 0; i < results.length; i++) {
+                            updateArray.push(results[i].title);
                         }
                         return updateArray;
                     }
                 }
             ])
             .then(answers => {
-                connection.query(
-                    "UPDATE employee SET ? WHERE ?",
-                    [
-                        {
-                            role: answers.updateRole
+                console.log(answers);
+                let name = answers.updateEmp;
+                connection.query("SELECT role.id FROM role WHERE role.title = (?)", [answers.updateRole],
+                function(err, res){
+                    if (err) throw err;
+                    roleID = res[0].id;
+                    console.log(roleID);
+                    updateEmployee(name, roleID);
+                }
+                )
+                // connection.query(
+                //     "UPDATE employee SET ? WHERE ?",
+                //     [
+                //         {
+                //             role: answers.updateRole
 
-                        },
-                        {
-                            first_name: answers.updateEmp
-                        }
-                    ],
-                    function (err) {
-                        if (err) throw err;
-                        console.log("Updated employee role!");
-                        loadPrompts();
-                    });
-    })    })    }
-}       }// function getRoles() {
-//     connect.query("select * FROM employee")
-//     function (err) {
-//         if (err) throw err;
-//     }
+                //         },
+                //         {
+                //             first_name: answers.updateEmp
+                //         }
+                //     ],
+                //     function (err) {
+                //         if (err) throw err;
+                //         console.log("Updated employee role!");
+                //         loadPrompts();
+                //     }
+                // )
+                loadPrompts();
+            })
+    })
+}
+     function getRoles() {
+    connection.query("SELECT * FROM employee",
+    function (err, results) {
+        if (err) throw err;
+for (let i = 0; i < results.length; i++) {
+    updateArray.push(results[i].first_name);
+}
+    })
+}
 
     //query database for roles
     //update the local array to have the roles from the role db
     //push those roles to the choice array
+
+    function updateEmployee(fname, id){
+        connection.query("UPDATE employee SET role_id = ? WHERE first_name = ?",[ id, fname ], 
+        function(err, res) {
+        if (err) throw err;
+        console.log(fname + " has been updated!")
+      });
+    }
