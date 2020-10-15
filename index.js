@@ -239,9 +239,12 @@ const addEmployee = () => {
             loadPrompts();
         });
 
-};
+};  
 
-const updateEmpRole () {
+const updateEmpRole() {
+
+    console.log("Update employee role");
+
     let query = "SELECT first_name, last_name, title, role.id FROM employee LEFT JOIN role ON role.id = employee.role_id";
     connect.query(query, function (err, res) {
         if (err) throw err;
@@ -249,9 +252,10 @@ const updateEmpRole () {
             .prompt([
                 {
                     type: "list",
+                    name: "updateEmp",
                     message: "Pick which employee you would like to update:",
                     choices: updateArray,
-                    name: "updateEmp",
+
                 },
                 {
                     type: "list",
@@ -264,31 +268,32 @@ const updateEmpRole () {
                         }
                         return updateArray;
                     }
-                } 
+                }
             ])
             .then(answers => {
                 connection.query(
                     "UPDATE employee SET ? WHERE ?",
                     [
-                    {
+                        {
                             role: answers.updateRole
 
-                    },
-                    {
-                        first_name: answers.updateEmp
-                    }
-                ],
+                        },
+                        {
+                            first_name: answers.updateEmp
+                        }
+                    ],
                     function (err) {
                         if (err) throw err;
                         console.log("Updated employee role!");
                         loadPrompts();
-                    }
-                );
-            });
-    };
-};
-    function getRoles() {
-        connect.query("select * FROM employee")
-        function (err) {
-            if (err) throw err;
-        }
+                    });
+    })    })    }
+}       }// function getRoles() {
+//     connect.query("select * FROM employee")
+//     function (err) {
+//         if (err) throw err;
+//     }
+
+    //query database for roles
+    //update the local array to have the roles from the role db
+    //push those roles to the choice array
