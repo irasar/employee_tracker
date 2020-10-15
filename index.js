@@ -75,36 +75,26 @@ function loadPrompts() {
             //calling functions depending on users choice
             switch (answers.choice) {
                 case "VIEW_EMPLOYEES":
-                    console.log("view employees");
-
                     return viewEmployees();
                     break;
                 case "VIEW_DEPARTMENTS":
-                    console.log("view departments");
                     return viewDepartment();
                     break;
-
                 case "VIEW_ROLES":
-                    console.log("View Roles");
                     return viewRoles();
                     break;
                 case "ADD_EMPLOYEE":
-                    console.log("Add employees");
                     return addEmployee();
                     break;
                 case "ADD_ROLE":
-                    console.log("Add Role");
                     return addRole();
                     break;
                 case "ADD_DEPARTMENT":
-                    console.log("Add Department");
                     return addDep();
                     break;
                 case "UPDATE_ROLE":
-                    console.log("Update Employee Roles");
                     return updateEmpRole();
                     break;
-
                 default:
                     console.log("quit");
             }
@@ -136,7 +126,7 @@ const viewRoles = () => {
         if (err) throw err;
         //logging the table results to the console
         console.table(results);
-         //displaying main menu prompts
+         //displaying main menu prompts once user has finished prompt
         loadPrompts();
     });
 };
@@ -171,7 +161,7 @@ const addRole = () => {
                 function (err) {
                     if (err) throw err;
                     console.log("Your role was created successfully!");
-                    
+                    //displaying main menu prompts once user has finsihed prompt
                     loadPrompts();
                 }
             );
@@ -189,19 +179,18 @@ const addDep = () => {
         ])
         .then(function (answers) {
             connection.query(
+                //adding into department table
                 "INSERT INTO department SET ?",
                 { name: answers.depAdd },
                 function (err) {
                     if (err) throw err;
                     console.log("Your department was created successfully!");
+                    //displaying main menu prompts once user has finished prompt
                     loadPrompts();
                 }
             );
         });
 };
-
-
-
 
 
 const addEmployee = () => {
@@ -230,6 +219,7 @@ const addEmployee = () => {
         ])
         .then((answers) => {
             connection.query(
+                //adding to employee table
                 "INSERT INTO employee SET ?",
                 {
                     first_name: answers.newFirst,
@@ -242,6 +232,7 @@ const addEmployee = () => {
                 }
             );
             console.log("Your employee was created successfully!");
+            //displaying main menu prompts once user has finished prompt
             loadPrompts();
         });
 
@@ -286,23 +277,7 @@ function updateEmpRole() {
                     updateEmployee(name, roleID);
                 }
                 )
-                // connection.query(
-                //     "UPDATE employee SET ? WHERE ?",
-                //     [
-                //         {
-                //             role: answers.updateRole
-
-                //         },
-                //         {
-                //             first_name: answers.updateEmp
-                //         }
-                //     ],
-                //     function (err) {
-                //         if (err) throw err;
-                //         console.log("Updated employee role!");
-                //         loadPrompts();
-                //     }
-                // )
+                 //displaying main menu prompts once user has finished prompt
                 loadPrompts();
             })
     })
@@ -316,11 +291,6 @@ for (let i = 0; i < results.length; i++) {
 }
     })
 }
-
-    //query database for roles
-    //update the local array to have the roles from the role db
-    //push those roles to the choice array
-
     function updateEmployee(fname, id){
         connection.query("UPDATE employee SET role_id = ? WHERE first_name = ?",[ id, fname ], 
         function(err, res) {
